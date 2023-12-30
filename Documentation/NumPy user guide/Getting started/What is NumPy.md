@@ -5,4 +5,14 @@ At the core of the NumPy package, is the *ndarray* object. This encapsulates *n*
 - NumPy arrays have a fixed size at creation, unlike Python lists (which can grow dynamically). Changing the size of an *ndarray* will create a new array and delete the original.
 - The elements in a NumPy array are all required to be of the same data type, and thus will be the same size in memory. The excetion: one can have arrays of (Python, including NumPy) objects, thereby allowing for arrays of different sized elements.
 - NumPy arrays facilitate advanced mathematical and other types of operations on large numbers of data. Typically, such operations are executed more efficiently and with less code than is possible using Pyton's built-in sequences.
-- A growing plethora of scientific and mathematical Python-based 
+- A growing plethora of scientific and mathematical Python-based packages are using NumPy arrays; though these typically support Python-sequence input, they convert such input to NumPy arrays prior to processing, and they often output NumPy arrays. In other words, in order to efficiently use much (perhaps even most) of today's scientific/mathematical Python-based software, just knowing how to use Python's built-in sequence types is insufficient-one also needs to know how to use NumPy arrays.
+
+The points about sequence size and speed are particularly important in scientific computing. As a simple example, consider the case of multiplying each element in a 1-D sequence with the corresponding element in another sequence of the same length. If the data are stored in two Python lists, `a` and `b`, we could iterate over each element:
+
+```python
+c = []
+for i in range(len(a)):
+	c.append(a[i] * b[i])
+```
+
+This produces the correct answer, but if `a` and `b` each contain millions of numbers, we will pay the price for the inefficiencies of looping in Python. We could accomplish the same task much more quickly in C by writing ()
