@@ -17,4 +17,24 @@ There's a ton of information about NumPy out there. If you are just starting, we
 - [Scientific Python Lectures] Besides convering NumPy, these lectures offer a broader introduction to the scientific Python ecosystem.
 - [NumPy: the absolute basics for beginners]
 - [NumPy tutorial *by Nicolas Rougier*]
-- [NumPy]
+- [Stanford CS231 *by Justin Jhnson*]
+- [NumPy User Guide]
+
+📙**Books**
+- [Guide to NumPy *by Travis E. Oliphant*] This is a free version 1 from 2006. For the latest copy (2015) see [here].
+- [From Python to NumPy *by Nicolas P.Rougier*]
+- [Elegant SciPy] *by Juan Nunez-lglesias, Stefan van der Walt, and Harriet Dashnow*
+
+You may also want to check out the [Goodreads list] on the subject of "Python+Scipy." Most books there are about the "SciPy ecosystem", which has NumPy at its core.
+
+📹**Videos**
+- [Introduction to Numerical Computing with NumPy] *by Alex Chabot-Leclerc*
+
+<hr>
+
+## Advanced
+
+Try these advanced resources for a better understanding of NumPy concepts like advanced indexing, splitting, stacking, linear algebra, and more.
+
+💻**Tutorials
+- [100 NumPy Exercises] *by Nicolas P.R*
