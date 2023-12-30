@@ -1,3 +1,5 @@
+# What is NumPy?
+
 NumPy is the fundametal package for scientific computing in Python. It is a Python library that provides a multidimensional array object, various derived objects (such as masked arrays and matrices), and an assortment of routines for fast operations on arrays, including mathematical, logical, shape maniuplation, sorting, selecting, I/O, discrete Fourier transforms, basic linear algebra, basic statistical operations, random simulation and much more.
 
 At the core of the NumPy package, is the *ndarray* object. This encapsulates *n*-dimensional arrays of homogeneous data types, with many operations being performed in compiled code for performance. There are several important differences between NumPy arrays and the standard Python sequences:
@@ -23,4 +25,24 @@ for (i = 0; i < rows; i++){
 }
 ```
 
-This saves all the overhead involved in interpreting the Python code and manipulating Python objects, but at the expese of the benefits gained from coding in Python. Furthermore, the coding work required increases with the dimensionality of our data. In the case of a 2-D array, for exam
+This saves all the overhead involved in interpreting the Python code and manipulating Python objects, but at the expese of the benefits gained from coding in Python. Furthermore, the coding work required increases with the dimensionality of our data. In the case of a 2-D array, for example, the C code (abridged as before) expands to
+
+```C
+for (i = 0; i < rows; i++){
+	for (j = 0; j < columns; j++){
+		c[i][j] = a[i][j] * b[i][j];
+	}
+}
+```
+
+NumPy gives us the best of both worlds: element-by-element operations are the "default mode" when an *ndarray* is involved, but the element-by-element operation is speedily executed by precompiled C code. In NumPy
+
+```Python
+c = a * b
+```
+
+does what the earlier examples do, at near-C speeds, but with the code simplicity we expect from somthing based on Python. Indeed, the NumPy idion is even simpler! This last example illustrates two of NumPy's features which are the basic of much of tis power: vectorization and broadcasting.
+
+## Why is NumPy Fast?
+
+Vectorization describes the absence of any explicit looping, indexing, etc., in the code - these things are taking place, of course, just
