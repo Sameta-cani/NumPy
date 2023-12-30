@@ -52,4 +52,15 @@ On all of Windows, macOS, and Linux:
 
 #### Alternative if you prefer pip/PyPI
 
-For users who know, from personal preference or reading about the main differences between conda and pip below, 
+For users who know, from personal preference or reading about the main differences between conda and pip below, they prefer a pip/PyPI-based solution, we recommend:
+
+- Install Python from [python.org](python.org), [Homebrew](https://brew.sh/), or your Linux package manager.
+- Use [Poetry](https://python-poetry.org/) as the most well-maintained tool that provides a dependency resolver and environment management capabilities in a similar fashion as conda does.
+
+## Python package management 
+
+Managing packages is a challenging problem, and, as a result, there are lots of tools. For web and general purpose Python development there's a whole [host of tools](https://packaging.python.org/en/latest/guides/tool-recommendations/) complementary with pip. For high-performance computing (HPC), [Spack](https://github.com/spack/spack) is worth considering. For most NumPy users though, [conda](https://conda.io/en/latest/) and [pip](https://pip.pypa.io/en/stable/) are the two most popular tools.
+
+### Pip & conda
+
+The two main tools that install Python packages are `pip` and `conda`. Their functionality par
