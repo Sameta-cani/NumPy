@@ -10,4 +10,3 @@ Below is a curated collection of educational resources, both for self-learning a
 
 There's a ton of information about NumPy out there. If you are just starting, we'd strongly recommend the following:
 
-e

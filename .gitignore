@@ -4,6 +4,8 @@
 ### Obsidian ###
 # config dir
 .obsidian/
+.makemd/
+.trash/
 
 ### Windows ###
 # Windows thumbnail cache files
