@@ -36,22 +36,23 @@ You may also want to check out the [Goodreads list] on the subject of "Python+Sc
 
 Try these advanced resources for a better understanding of NumPy concepts like advanced indexing, splitting, stacking, linear algebra, and more.
 
-💻**Tutorials
+💻**Tutorials**
 - [100 NumPy Exercises] *by Nicolas P.Rougier*
 - [An Introduction to NumPy and Scipy] *by M. Scott Shell*
 - [NumPy Medkits] *by Stefan van der Walt*
 - [NumPy Tutorials] A collection of tutorials and educational meterials in the format of Jupyter Notebooks developed and maintained by the NumPy Documentation team. To submit your own content, visit the [numpy-tutorials repository on GitHub].
 
-📙**Books 
+📙**Books** 
 - [Python Data Science Handbook] *by Jake Vanderplas*
 - [Python for Data Analysis] *by Wes McKinney*
 - [Numerical Python: Scientific Computing and Data Science Applications with NumPy, SciPy, and Matplotlib] *by Robert Johansson*
 
-📹**Videos 
+📹**Videos**
 - [Advanced NumPy - broadcasting rules, strides, and advanced indexing] *by Juan Nunez-lglesias*
 
 <hr>
 ## NumPy Talks
+
 - [The Future of NumPy Indexing] *by Jaime Fernandez* (2016)
 - [Evolution of Array Computing in Python] *by Ralf Gommers* (2019)
 - [NumPy: what has changed and what is going to change?] *by Matti Picus* (2019)
