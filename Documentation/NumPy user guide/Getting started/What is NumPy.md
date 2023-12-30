@@ -15,4 +15,12 @@ for i in range(len(a)):
 	c.append(a[i] * b[i])
 ```
 
-This produces the correct answer, but if `a` and `b` each contain millions of numbers, we will pay the price for the inefficiencies of looping in Python. We could accomplish the same task much more quickly in C by writing ()
+This produces the correct answer, but if `a` and `b` each contain millions of numbers, we will pay the price for the inefficiencies of looping in Python. We could accomplish the same task much more quickly in C by writing (for clarity we neglect variable declarations and initializations, memory allocation, etc.)
+
+```C
+for (i = 0; i < rows; i++){
+	c[i] = a[i] * b[i];
+}
+```
+
+This saves all the overhead involved in interpreting the Python code and manipulating Python objects, but at the expese of the benefits gained from coding in Python. Furthermore, the coding work required increases with the dimensionality of our data. In the case of a 2-D array, for exam

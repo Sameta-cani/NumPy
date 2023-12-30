@@ -51,6 +51,7 @@ Try these advanced resources for a better understanding of NumPy concepts like a
 - [Advanced NumPy - broadcasting rules, strides, and advanced indexing] *by Juan Nunez-lglesias*
 
 <hr>
+
 ## NumPy Talks
 
 - [The Future of NumPy Indexing] *by Jaime Fernandez* (2016)
