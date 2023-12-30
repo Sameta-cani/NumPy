@@ -39,4 +39,17 @@ We'll start with recommendations based on the user's experience level and operat
 
 On all of Windows, macOS, and Linux:
 
-- Install [Anaconda]
+- Install [Anaconda](https://www.anaconda.com/)(it installs all packages you need and all other tools mentioned below).
+- For writing and executing code, use notebooks in [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/index.html) for exploratory and interative computing, and [Spyder](https://www.spyder-ide.org/) or [Visual Studio Code](https://code.visualstudio.com/) for writing scripts and packages.
+- Use [Anaconda Navigator](https://docs.anaconda.com/free/navigator/) to manage your packages and start JupyterLab, Spyder, or Visual Studio Code.
+
+### Advanced users
+
+#### Conda
+
+- Install [Miniforge](https://github.com/conda-forge/miniforge).
+- Keep the `base` conda enviroment minimal, and use one or more [conda environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) to install the package you need for the task or project you're working on.
+
+#### Alternative if you prefer pip/PyPI
+
+For users who know, from personal preference or reading about the main differences between conda and pip below, 
