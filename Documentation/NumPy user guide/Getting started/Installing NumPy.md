@@ -25,3 +25,18 @@ If you use `pip`, you can install NumPy with:
 pip install numpy
 ```
 
+Also when using pip, it's good practice to use a virtual environment - see [Reproducible installs] below for why, and [this guide] for details on using virtual environments.
+
+# Python and NumPy installation guide
+
+Installing and managing packages in Python is complicated, there are a number of alternative solutions for most tasks. This guide tries to give the reader a sense of the best (or most popular) solutions, and give clear recommendations. It focuses on users of Python, NumPy, and the PyData (or numerical computing) stack on common operating systems and hardware.
+
+## Recommendations 
+
+We'll start with recommendations based on the user's experience level and operating system of interest. If you're in between "beginning" and "advanced", please go with "beginning" if you want to keep things simple, and with "advanced" if you want to work according to best practices that go a longer way in the future.
+
+### Beginning users 
+
+On all of Windows, macOS, and Linux:
+
+- Install [Anaconda]
