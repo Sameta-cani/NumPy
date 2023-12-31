@@ -201,14 +201,200 @@ One-dimensional arrays are then printed as rows, bidimensionals as matrices and 
 
 See [[#Shape Manipulation]] to get more details on `reshape`.
 
+If an array is too large to be printed, NumPy automatically skips the central part of the array and only prints the corners:
+
+```python
+>>> print(np.arange(10000))
+[   0    1    2 ... 9997 9998 9999]
+>>>
+>>> print(np.arange(10000).reshape(100, 100))
+[[   0    1    2 ...   97   98   99]
+ [ 100  101  102 ...  197  198  199]
+ [ 200  201  202 ...  297  298  299]
+ ...
+ [9700 9701 9702 ... 9797 9798 9799]
+ [9800 9801 9802 ... 9897 9898 9899]
+ [9900 9901 9902 ... 9997 9998 9999]]
+```
+
+To disable this behaviour and force NumPy to print the entire array, you can change the printing options using `set_printoptions`.
+
+```python
+>>> np.set_printoptions(threshold=sys.maxsize) # sys module should be imported
+```
+
+### Basic Operations
+
+Arithmetic operators on arrays apply *elementwise*. A new array is created and filled with the result.
+
+```python
+>>> a = np.array([20, 30, 40, 50])
+>>> b = np.arange(4)
+>>> b
+array([0, 1, 2, 3])
+>>> c = a - b
+>>> c
+array([20, 29, 39, 47])
+>>> b**2
+array([0, 1, 4, 9])
+>>> 10 * np.sin(a)
+array([ 9.12945251, -9.88031624,  7.4511316 , -2.62374854])
+>>> a < 35
+array([ True,  True, False, False])
+```
+
+Unlike in many matrix languages, the product operator `*` operates elementwise in NumPy arrays. The matrix product can be performed using the `@` operator (in python >= 3.5) or the `dot` function or method:
+
+```python
+>>> A = np.array([[1, 1],
+...               [0, 1]])
+>>> B = np.array([[2, 0],
+...               [3, 4]])
+>>> A * B # elementwise product
+array([[2, 0],
+       [0, 4]])
+>>> A @ B # matrix product
+array([[5, 4],
+       [3, 4]])
+>>> A.dot(B) # another matrix product
+array([[5, 4],
+       [3, 4]])
+```
+
+Some operations, such as `+=` and `*=`, act in place to modify an existing array rather than create a new one.
+
+```python
+>>> rg = np.random.default_rng(1) # create instance of default random number generator
+>>> a = np.ones((2, 3), dtype=int)
+>>> b = rg.random((2, 3))
+>>> a *= 3
+>>> a
+array([[3, 3, 3],
+	   [3, 3, 3]])
+>>> b += a
+>>> b
+array([[3.51182162, 3.9504637 , 3.14415961],
+       [3.94864945, 3.31183145, 3.42332645]])
+>>> a + b # b is not automatically converted to integer type
+Traceback (most recent call last):
+    ...
+numpy.core._exceptions._UFuncOutputCastingError: Cannot cast ufunc 'add' output from dtype('float64') to dtype('int64') with casting rule 'same_kind'
+```
+
+When operating with arrays of different types, the type of the resulting array corresponds to the more general or precise one (a behavior known as upcasting).
+
+```python
+>>> a = np.ones(3, dtype=np.int32)
+>>> b = np.linspace(0, pi, 3)
+>>> b.dtype.name
+'float64'
+>>> c = a + b
+>>> c
+array([1.        , 2.57079633, 4.14159265])
+>>> c.dtype.name
+'float64'
+>>> d = np.exp(c * 1j)
+>>> d
+array([ 0.54030231+0.84147098j, -0.84147098+0.54030231j,
+       -0.54030231-0.84147098j])
+>>> d.dtype.name
+'complex128'
+```
+
+Many unary operations, such as computing the sum of all the elements in the array, are implemented as methods of the `ndarray` class.
+
+```python
+>>> a = rg.random((2, 3))
+>>> a
+array([[0.82770259, 0.40919914, 0.54959369],
+       [0.02755911, 0.75351311, 0.53814331]])
+>>> a.sum()
+3.1057109529998157
+>>> a.min()
+0.027559113243068367
+>>> a.max()
+0.8277025938204418
+```
+
+By default, these operations apply to the array as though it were a list of numbers, regardless of its shape. However, by specifying the `axis` parameter you can apply an operation along the specified axis of an array:
+
+```python
+>>> b = np.arange(12).reshape(3, 4)
+>>> b
+array([[ 0,  1,  2,  3],
+       [ 4,  5,  6,  7],
+       [ 8,  9, 10, 11]])
+>>>
+>>> b.sum(axis=0) # sum of each column
+array([12, 15, 18, 21])
+>>>
+>>> b.min(axis=1) # min of each row
+array([0, 4, 8])
+>>>
+>>> b.cumsum(axis=1) # cumulative sum along each row
+array([[ 0,  1,  3,  6],
+       [ 4,  9, 15, 22],
+       [ 8, 17, 27, 38]], dtype=int32)
+```
 
 
+### Universal Functions
 
+NumPy provides familiar mathematical functions such as sin, cos, and exp. In NumPy, these are called "universal functions" (`ufunc`). Within NumPy, thses functions operate elementwise on an array, producing an array as output.
 
+```python
+>>> B = np.arange(3)
+>>> B
+array([0, 1, 2])
+>>> np.exp(B)
+array([1.        , 2.71828183, 7.3890561 ])
+>>> np.sqrt(B)
+array([0.        , 1.        , 1.41421356])
+>>> C = np.array([2., -1., 4.])
+>>> np.add(B, C)
+array([2., 0., 6.])
+```
 
+**See aslo**
+[`all`](https://numpy.org/doc/stable/reference/generated/numpy.all.html#numpy.all "numpy.all"), [`any`](https://numpy.org/doc/stable/reference/generated/numpy.any.html#numpy.any "numpy.any"), [`apply_along_axis`](https://numpy.org/doc/stable/reference/generated/numpy.apply_along_axis.html#numpy.apply_along_axis "numpy.apply_along_axis"), [`argmax`](https://numpy.org/doc/stable/reference/generated/numpy.argmax.html#numpy.argmax "numpy.argmax"), [`argmin`](https://numpy.org/doc/stable/reference/generated/numpy.argmin.html#numpy.argmin "numpy.argmin"), [`argsort`](https://numpy.org/doc/stable/reference/generated/numpy.argsort.html#numpy.argsort "numpy.argsort"), [`average`](https://numpy.org/doc/stable/reference/generated/numpy.average.html#numpy.average "numpy.average"), [`bincount`](https://numpy.org/doc/stable/reference/generated/numpy.bincount.html#numpy.bincount "numpy.bincount"), [`ceil`](https://numpy.org/doc/stable/reference/generated/numpy.ceil.html#numpy.ceil "numpy.ceil"), [`clip`](https://numpy.org/doc/stable/reference/generated/numpy.clip.html#numpy.clip "numpy.clip"), [`conj`](https://numpy.org/doc/stable/reference/generated/numpy.conj.html#numpy.conj "numpy.conj"), [`corrcoef`](https://numpy.org/doc/stable/reference/generated/numpy.corrcoef.html#numpy.corrcoef "numpy.corrcoef"), [`cov`](https://numpy.org/doc/stable/reference/generated/numpy.cov.html#numpy.cov "numpy.cov"), [`cross`](https://numpy.org/doc/stable/reference/generated/numpy.cross.html#numpy.cross "numpy.cross"), [`cumprod`](https://numpy.org/doc/stable/reference/generated/numpy.cumprod.html#numpy.cumprod "numpy.cumprod"), [`cumsum`](https://numpy.org/doc/stable/reference/generated/numpy.cumsum.html#numpy.cumsum "numpy.cumsum"), [`diff`](https://numpy.org/doc/stable/reference/generated/numpy.diff.html#numpy.diff "numpy.diff"), [`dot`](https://numpy.org/doc/stable/reference/generated/numpy.dot.html#numpy.dot "numpy.dot"), [`floor`](https://numpy.org/doc/stable/reference/generated/numpy.floor.html#numpy.floor "numpy.floor"), [`inner`](https://numpy.org/doc/stable/reference/generated/numpy.inner.html#numpy.inner "numpy.inner"), [`invert`](https://numpy.org/doc/stable/reference/generated/numpy.invert.html#numpy.invert "numpy.invert"), [`lexsort`](https://numpy.org/doc/stable/reference/generated/numpy.lexsort.html#numpy.lexsort "numpy.lexsort"), [`max`](https://numpy.org/doc/stable/reference/generated/numpy.max.html#numpy.max "numpy.max"), [`maximum`](https://numpy.org/doc/stable/reference/generated/numpy.maximum.html#numpy.maximum "numpy.maximum"), [`mean`](https://numpy.org/doc/stable/reference/generated/numpy.mean.html#numpy.mean "numpy.mean"), [`median`](https://numpy.org/doc/stable/reference/generated/numpy.median.html#numpy.median "numpy.median"), [`min`](https://numpy.org/doc/stable/reference/generated/numpy.min.html#numpy.min "numpy.min"), [`minimum`](https://numpy.org/doc/stable/reference/generated/numpy.minimum.html#numpy.minimum "numpy.minimum"), [`nonzero`](https://numpy.org/doc/stable/reference/generated/numpy.nonzero.html#numpy.nonzero "numpy.nonzero"), [`outer`](https://numpy.org/doc/stable/reference/generated/numpy.outer.html#numpy.outer "numpy.outer"), [`prod`](https://numpy.org/doc/stable/reference/generated/numpy.prod.html#numpy.prod "numpy.prod"), [`re`](https://docs.python.org/3/library/re.html#module-re "(in Python v3.11)"), [`round`](https://numpy.org/doc/stable/reference/generated/numpy.round.html#numpy.round "numpy.round"), [`sort`](https://numpy.org/doc/stable/reference/generated/numpy.sort.html#numpy.sort "numpy.sort"), [`std`](https://numpy.org/doc/stable/reference/generated/numpy.std.html#numpy.std "numpy.std"), [`sum`](https://numpy.org/doc/stable/reference/generated/numpy.sum.html#numpy.sum "numpy.sum"), [`trace`](https://numpy.org/doc/stable/reference/generated/numpy.trace.html#numpy.trace "numpy.trace"), [`transpose`](https://numpy.org/doc/stable/reference/generated/numpy.transpose.html#numpy.transpose "numpy.transpose"), [`var`](https://numpy.org/doc/stable/reference/generated/numpy.var.html#numpy.var "numpy.var"), [`vdot`](https://numpy.org/doc/stable/reference/generated/numpy.vdot.html#numpy.vdot "numpy.vdot"), [`vectorize`](https://numpy.org/doc/stable/reference/generated/numpy.vectorize.html#numpy.vectorize "numpy.vectorize"), [`where`](https://numpy.org/doc/stable/reference/generated/numpy.where.html#numpy.where "numpy.where")
 
+### Indexing, Slicing and Iterating
 
+**One-dimensional** arrays can be indexed, sliced and iterated over, much like [lists](https://docs.python.org/tutorial/introduction.html#lists) and other Python sequences.
 
+```python
+>>> a = np.arange(10)**3
+>>> a
+array([  0,   1,   8,  27,  64, 125, 216, 343, 512, 729], dtype=int32)
+>>> a[2]
+8
+>>> a[2:5]
+array([ 8, 27, 64], dtype=int32)
+>>> # equivalent to a[0:6:2] = 1000;
+>>> # from start to position 6, exclusive, set every 2nd element to 1000
+>>> a[:6:2] = 1000
+>>> a
+array([1000,    1, 1000,   27, 1000,  125,  216,  343,  512,  729],
+      dtype=int32)
+>>> a[::-1] # reversed a
+array([ 729,  512,  343,  216,  125, 1000,   27, 1000,    1, 1000],
+      dtype=int32)
+>>> for i in a:
+...     print(i**(1 / 3.))
+...
+9.999999999999998
+1.0
+9.999999999999998
+3.0
+9.999999999999998
+5.0
+5.999999999999999
+6.999999999999999
+7.999999999999999
+8.999999999999998
+```
+
+**Multidimensional** arrays can have one index per axis.
 
 
 
