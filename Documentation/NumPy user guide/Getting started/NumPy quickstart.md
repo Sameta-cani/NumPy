@@ -1005,7 +1005,7 @@ You can look at the following example to see how to use boolean indexing to gene
 >>> plt.imshow(mandelbrot(400, 400))
 ```
 
-![Mandelbrot](image/mandelbrot.png)
+![Mandelbrot](../../../image/mandelbrot.png)
 
 The second way of indexing with booleans is more similar to integer indexing; for each dimension of the array we give a 1D boolean array selecting the slices we want:
 
@@ -1167,4 +1167,32 @@ The logic behind those functions in more than two dimensions can be strange.
 
 ### Histograms
 
-The NumPy `histogram` function applied to an array returns a pair of vectors: the histogram of the array and a vector of the bin edges. Beware: `matplotlib` also has a function to build histograms (called `hist`, as in Matlab) that 
+The NumPy `histogram` function applied to an array returns a pair of vectors: the histogram of the array and a vector of the bin edges. Beware: `matplotlib` also has a function to build histograms (called `hist`, as in Matlab) that differs from the one in NumPy. The main difference is that `pylab.hist` plots the histogram automatically, while `numpy.histogram` only generates the data.
+
+```python
+>>> import numpy as np
+>>> rg = np.random.default_rng(1)
+>>> import matplotlib.pyplot as plt
+>>> # Build a vector of 10000 normal deviates with variance 0.5^2 and mean 2
+>>> mu, sigma = 2, 0.5
+>>> v = rg.normal(mu, sigma, 10000)
+>>> # Plot a normalized histogram with 50 bins
+>>> plt.hist(v, bins=50, density=True) # matplotlib version (plot)
+(array...)
+>>> # Compute the histogram with numpy and then plot it
+>>> (n, bins) = np.histogram(v, bins=50, density=True) # NumPy version (no plot)
+>>> plt.plot(.5 * (bins[1:] + bins[:-1]), n)
+```
+
+![histogram](../../../image/histogram.png)
+
+With Matplotlib >= 3.4 you can also use `plt.stairs(n, bins)`.
+
+## Further reading 
+
+- The [Python tutorial](https://docs.python.org/tutorial/)
+- [NumPy reference](https://numpy.org/doc/stable/reference/index.html#reference)
+- [SciPy Tutorial](https://docs.scipy.org/doc/scipy/tutorial/index.html)
+- [SciPy Lecture Notes](https://scipy-lectures.org/)
+- A [matlab, R, IDL, NumPy/SciPy dictionary](http://mathesaurus.sf.net/)
+- [tutorial-svd](https://numpy.org/numpy-tutorials/content/tutorial-svd.html "(in NumPy tutorials)")
