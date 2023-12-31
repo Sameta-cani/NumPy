@@ -394,44 +394,248 @@ array([ 729,  512,  343,  216,  125, 1000,   27, 1000,    1, 1000],
 8.999999999999998
 ```
 
-**Multidimensional** arrays can have one index per axis.
+**Multidimensional** arrays can have one index per axis. These indices are given in a tuple separated by commas:
 
+```python
+>>> def f(x, y):
+...     return 10 * x + y
+...
+>>> b = np.fromfunction(f, (5, 4), dtype=int)
+>>> b
+array([[ 0,  1,  2,  3],
+       [10, 11, 12, 13],
+       [20, 21, 22, 23],
+       [30, 31, 32, 33],
+       [40, 41, 42, 43]])
+>>> b[2, 3]
+23
+>>> b[0:5, 1] # each row in the second column of b
+array([ 1, 11, 21, 31, 41])
+>>> b[:, 1] # equivalent to the previous example
+array([ 1, 11, 21, 31, 41])
+>>> b[1:3, :] # each column in the second and third row of b
+array([[10, 11, 12, 13],
+       [20, 21, 22, 23]])
+```
 
+When fewer indices are provided than the number of axes, the missing indices are considered complete slices `:`
 
+```python
+>>> b[-1] # the last row. Equivalent to b[-1, :]
+array([40, 41, 42, 43])
+```
 
+The expression within brackets in `b[i]` is treated as an `i` followed by as many instances of `:` as needed to represent the remaining axes. NumPy also allows you to wrtie this using dots as `b[i, ...]`.
 
+The **dots** (`...`) represent as many colons as needed to produce a complete indexing tuple. For example, if `x` is an array with 5 axes, then
 
+- `x[1, 2, ...]` is equivalent to `x[1, 2, :, :, :]`,
+- `x[..., 3]` to `x[:, :, :, :, 3]` and
+- `x[4, ..., 5, :]` to `x[4, :, :, 5, :]`.
 
+```python
+>>> c = np.array([[[  0,  1,  2], # a 3D array (two stacked 2D arrays)
+...                [10, 12, 13]],
+...               [[100, 101, 102],
+...                [110, 112, 113]]])
+>>> c.shape
+(2, 2, 3)
+>>> c[1, ...] # same as c[1, :, :] or c[1]
+array([[100, 101, 102],
+       [110, 112, 113]])
+>>> c[..., 2] # same as c[:, :, 2]
+array([[  2,  13],
+       [102, 113]])
+```
 
+**Iterating** over multidimensional arrays is done with respect to the first axis:
 
+```python
+>>> for row in b:
+...     print(row)
+...
+[0 1 2 3]
+[10 11 12 13]
+[20 21 22 23]
+[30 31 32 33]
+[40 41 42 43]
+```
 
+However, if one wants to perform an operation on each element in the array, one can use the `flat` attribute which is an [iterator](https://docs.python.org/tutorial/classes.html#iterators) over all the elements of the array:
 
+```python
+>>> for element in b.flat:
+...     print(element)
+...
+0
+1
+2
+3
+10
+11
+12
+13
+20
+21
+22
+23
+30
+31
+32
+33
+40
+41
+42
+43
+```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+**See also**
+[Indexing on ndarrays](https://numpy.org/doc/stable/user/basics.indexing.html#basics-indexing), [Indexing routines](https://numpy.org/doc/stable/reference/arrays.indexing.html#arrays-indexing) (reference), [`newaxis`](https://numpy.org/doc/stable/reference/constants.html#numpy.newaxis "numpy.newaxis"), [`ndenumerate`](https://numpy.org/doc/stable/reference/generated/numpy.ndenumerate.html#numpy.ndenumerate "numpy.ndenumerate"), [`indices`](https://numpy.org/doc/stable/reference/generated/numpy.indices.html#numpy.indices "numpy.indices")
 
 ## Shape Manipulation
+
+### Changing the shape of an array 
+
+An array has a shape given by the number of elements along each axis:
+
+```python
+>>> a = np.floor(10 * rg.random((3, 4)))
+>>> a
+array([[3., 7., 3., 4.],
+       [1., 4., 2., 2.],
+       [7., 2., 4., 9.]])
+>>> a.shape
+(3, 4)
+```
+
+The shape of an array can be changed with various commands. Note that the following three commands all return modified array, but do not change the original array:
+
+```python
+>>> a.ravel() # returns the array, flattened
+array([3., 7., 3., 4., 1., 4., 2., 2., 7., 2., 4., 9.])
+>>> a.reshape(6, 2) # returns the array with a modified shape
+array([[3., 7.],
+       [3., 4.],
+       [1., 4.],
+       [2., 2.],
+       [7., 2.],
+       [4., 9.]])
+>>> a.T # returns the array, transposed
+array([[3., 1., 7.],
+       [7., 4., 2.],
+       [3., 2., 4.],
+       [4., 2., 9.]])
+>>> a.T.shape
+(4, 3)
+>>> a.shape
+(3, 4)
+```
+
+The order of the elements in the array resulting from `ravel` is normally "C-style", that is, the rightmost index "changes the fastest", so the element after `a[0, 0]` is `a[0, 1]`. If the array is reshaped to some other shape, again the array is treated as "C-style". NumPy normally creates arrays sorted in this order, so `ravel` will usually not need to copy its argument, but if the array was made by taking slices of another array or created with unusal options, it may need to be copied. The functions `ravel` and `reshape` can also be instructed, using an optional argument, to use FORTRAN-style arrays, in which the leftmost index changes the fastest.
+
+The [`reshape`](https://numpy.org/doc/stable/reference/generated/numpy.reshape.html#numpy.reshape "numpy.reshape") function returns its argument with a modified shape, whereas the [`ndarray.resize`](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.resize.html#numpy.ndarray.resize "numpy.ndarray.resize") method modifies the array itself:
+
+```python
+>>> a
+array([[3., 7., 3., 4.],
+       [1., 4., 2., 2.],
+       [7., 2., 4., 9.]])
+>>> a.resize((2, 6))
+>>> a
+array([[3., 7., 3., 4., 1., 4.],
+       [2., 2., 7., 2., 4., 9.]])
+```
+
+If a dimension is given as `-1` in a reshaping operation, the other dimensions are automatically calculated:
+
+```python
+>>> a.reshape(3, -1)
+array([[3., 7., 3., 4.],
+       [1., 4., 2., 2.],
+       [7., 2., 4., 9.]])
+```
+
+**See also**
+[`ndarray.shape`](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.shape.html#numpy.ndarray.shape "numpy.ndarray.shape"), [`reshape`](https://numpy.org/doc/stable/reference/generated/numpy.reshape.html#numpy.reshape "numpy.reshape"), [`resize`](https://numpy.org/doc/stable/reference/generated/numpy.resize.html#numpy.resize "numpy.resize"), [`ravel`](https://numpy.org/doc/stable/reference/generated/numpy.ravel.html#numpy.ravel "numpy.ravel")
+
+### Stacking together different arrays 
+
+Several arrays can be stacked together along different axes:
+
+```python
+>>> a = np.floor(10 * rg.random((2, 2)))
+>>> a
+array([[9., 7.],
+       [5., 2.]])
+>>> b = np.floor(10 * rg.random((2, 2)))
+>>> b
+array([[1., 9.],
+       [5., 1.]])
+>>> np.vstack((a, b))
+array([[9., 7.],
+       [5., 2.],
+       [1., 9.],
+       [5., 1.]])
+>>> np.hstack((a, b))
+array([[9., 7., 1., 9.],
+       [5., 2., 5., 1.]])
+```
+
+The function [`column_stack`](https://numpy.org/doc/stable/reference/generated/numpy.column_stack.html#numpy.column_stack "numpy.column_stack") stacks 1D arrays as columns into a 2D array. It is equivalent to [`hstack`](https://numpy.org/doc/stable/reference/generated/numpy.hstack.html#numpy.hstack "numpy.hstack") only for 2D arrays:
+
+```python
+>>> from numpy import newaxis
+>>> np.column_stack((a, b)) # with 2D arrays
+array([[9., 7., 1., 9.],
+       [5., 2., 5., 1.]])
+>>> a = np.array([4., 2.])
+>>> b = np.array([3., 8.])
+>>> np.column_stack((a, b)) # returns a 2D array
+array([[4., 3.],
+       [2., 8.]])
+>>> np.hstack((a, b)) # the result is different
+array([4., 2., 3., 8.])
+>>> a[:, newaxis] # view 'a' as a 2D column vector
+array([[4.],
+       [2.]])
+>>> np.column_stack((a[:, newaxis], b[:, newaxis]))
+array([[4., 3.],
+       [2., 8.]])
+>>> np.hstack((a[:, newaxis], b[:, newaxis])) # the result is the same
+array([[4., 3.],
+       [2., 8.]])
+```
+
+On the other hand, the function [`row_stack`](https://numpy.org/doc/stable/reference/generated/numpy.row_stack.html#numpy.row_stack "numpy.row_stack") is equivalent to [`vstack`](https://numpy.org/doc/stable/reference/generated/numpy.vstack.html#numpy.vstack "numpy.vstack") for any input arrays. In fact, [`row_stack`](https://numpy.org/doc/stable/reference/generated/numpy.row_stack.html#numpy.row_stack "numpy.row_stack") is an alias for [`vstack`](https://numpy.org/doc/stable/reference/generated/numpy.vstack.html#numpy.vstack "numpy.vstack"):
+
+```python
+>>> np.column_stack is np.hstack
+False
+>>> np.row_stack is np.vstack
+True
+```
+
+In general, for arrays with more than two dimensions, [`hstack`](https://numpy.org/doc/stable/reference/generated/numpy.hstack.html#numpy.hstack "numpy.hstack") stacks along their second axes, [`vstack`](https://numpy.org/doc/stable/reference/generated/numpy.vstack.html#numpy.vstack "numpy.vstack") stacks along their first axes, and [`concatenate`](https://numpy.org/doc/stable/reference/generated/numpy.concatenate.html#numpy.concatenate "numpy.concatenate") allows for an optional arguments giving the number of the axis along which the concatenation should happen.
+
+**Note**
+
+In complex cases,  [`r_`](https://numpy.org/doc/stable/reference/generated/numpy.r_.html#numpy.r_ "numpy.r_") and [`c_`](https://numpy.org/doc/stable/reference/generated/numpy.c_.html#numpy.c_ "numpy.c_") are useful creating arrays by stacking numbers along one axis. They allow the use of range literals `:`.
+
+```python
+>>> np.r_[1:4, 0, 4]
+array([1, 2, 3, 0, 4])
+```
+
+When used with arrays as arguments, [`r_`](https://numpy.org/doc/stable/reference/generated/numpy.r_.html#numpy.r_ "numpy.r_") and [`c_`](https://numpy.org/doc/stable/reference/generated/numpy.c_.html#numpy.c_ "numpy.c_") are similar to [`vstack`](https://numpy.org/doc/stable/reference/generated/numpy.vstack.html#numpy.vstack "numpy.vstack") and [`hstack`](https://numpy.org/doc/stable/reference/generated/numpy.hstack.html#numpy.hstack "numpy.hstack") in their default behavior, but allow for an optional argument giving the number of the axis along which to concatenate.
+
+**See also**
+
+[`hstack`](https://numpy.org/doc/stable/reference/generated/numpy.hstack.html#numpy.hstack "numpy.hstack"), [`vstack`](https://numpy.org/doc/stable/reference/generated/numpy.vstack.html#numpy.vstack "numpy.vstack"), [`column_stack`](https://numpy.org/doc/stable/reference/generated/numpy.column_stack.html#numpy.column_stack "numpy.column_stack"), [`concatenate`](https://numpy.org/doc/stable/reference/generated/numpy.concatenate.html#numpy.concatenate "numpy.concatenate"), [`c_`](https://numpy.org/doc/stable/reference/generated/numpy.c_.html#numpy.c_ "numpy.c_"), [`r_`](https://numpy.org/doc/stable/reference/generated/numpy.r_.html#numpy.r_ "numpy.r_")
+
+### Splitting one array into several smaller ones
+
+Using [`hsplit`](https://numpy.org/doc/stable/reference/generated/numpy.hsplit.html#numpy.hsplit "numpy.hsplit"), you can split an array along its horizontal axis, either by specifying the number of equally shaped arrays to return, or by specifying the columns after which the division should occur:
+
+```python
+
+```
