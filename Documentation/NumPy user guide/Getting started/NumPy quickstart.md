@@ -360,6 +360,7 @@ array([2., 0., 6.])
 
 ### Indexing, Slicing and Iterating
 
+
 **One-dimensional** arrays can be indexed, sliced and iterated over, much like [lists](https://docs.python.org/tutorial/introduction.html#lists) and other Python sequences.
 
 ```python
