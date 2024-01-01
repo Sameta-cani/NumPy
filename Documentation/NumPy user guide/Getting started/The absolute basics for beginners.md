@@ -333,3 +333,285 @@ If you want to learn about C and Fortran order, you can [read more about the in
 
 [[NumPy quickstart#Shape Manipulation|Learn more about shape manipulation here]].
 
+## How to convert a 1D array into a 2D array (how to add a new axis to an array)
+
+*This section covers* `np.newaxis`, `np.expand_dims`
+
+You can use `np.newaxis` and `np.expand_dims` to increate the dimensions of your existing array.
+
+Using `np.newaxis` will increase the dimensions of your array by one dimension when used once. This means that a **1D** array will become a **2D** array, a **2D** array will become a **3D** array, and so on.
+
+For example, if you start with this array:
+
+```python
+>>> a = np.array([1, 2, 3, 4, 5, 6])
+>>> a.shape
+(6,)
+```
+
+You can use `np.newaxis` to add a new axis:
+
+```python 
+>>> a2 = a[np.newaxis, :]
+>>> a2.shape
+(1, 6)
+>>> a2
+array([[1, 2, 3, 4, 5, 6]])
+```
+
+You can explicitly convert a 1D array with either a row vector or a column vector using `np.newaxis`. For example, you can convert a 1D array to a row vector by inserting an axis along the first dimension:
+
+```python
+>>> row_vector = a[np.newaxis, :]
+>>> row_vector.shape
+(1, 6)
+```
+
+Or, for a column vector, you can insert an axis along the second dimension:
+
+```python
+>>> col_vector = a[:, np.newaxis]
+>>> col_vector.shape
+(6, 1)
+>>> col_vector
+array([[1],
+       [2],
+       [3],
+       [4],
+       [5],
+       [6]])
+```
+
+You can also expand an array by inserting a new axis at a specified position with `np.expand_dims`.
+
+For example, if you start with this array:
+
+```python
+>>> a = np.array([1, 2, 3, 4, 5, 6])
+>>> a.shape
+(6,)
+```
+
+You can use `np.expand_dims` to add an axis at index position 1 with:
+
+```python
+>>> b = np.expand_dims(a, axis=1)
+>>> b.shape
+(6, 1)
+```
+
+You can add an axis at index position 0 with:
+
+```python
+>>> c = np.expand_dims(a, axis=0)
+>>> c.shape
+(1, 6)
+```
+
+Find more information about  [newaxis here](https://numpy.org/doc/stable/reference/arrays.indexing.html#arrays-indexing) and `expand_dims` at [`expand_dims`](https://numpy.org/doc/stable/reference/generated/numpy.expand_dims.html#numpy.expand_dims "numpy.expand_dims").
+
+## Indexing and slicing
+
+You can index and slice NumPy arrays in the same ways you can slice Python lists.
+
+```python
+>>> data = np.array([1, 2, 3])
+>>>
+>>> data[1]
+2
+>>> data[0:2]
+array([1, 2])
+>>> data[1:]
+array([2, 3])
+>>> data[-2:]
+array([2, 3])
+```
+
+You can visualize it this way:
+
+![np_array](../../../image/np_indexing.png)
+You may want to take a section of your array or specific array elements to use in further analysis or additional operations. To do that, you'll need to subset, slice, and/or index your arrays.
+
+If you want to select values from your array that fulfill certain conditions, its' straightforward with NumPy.
+
+For example, if you start with this array:
+
+```python
+>>> a = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]])
+```
+
+You can easily print all of the values in the array that are less than 5.
+
+```python
+>>> print(a[a < 5])
+[1 2 3 4]
+```
+
+You can also select, for example, numbers that are equal to or greater than 5, and use that condition to index an array.
+
+```python
+>>> print(a[five_up])
+[ 5  6  7  8  9 10 11 12]
+```
+
+You can select elements that are divisible by 2:
+
+```python
+>>> divisible_by_2 = a[a%2==0]
+>>> print(divisible_by_2)
+[ 2  4  6  8 10 12]
+```
+
+Or you can select elements that satisfy two conditions using the `&` and `|` operators:
+
+```python
+>>> c = a[(a > 2) & (a < 11)]
+>>> print(c)
+[ 3  4  5  6  7  8  9 10]
+```
+
+You can also make use of the logical operators **&** and **|** in order to return boolean values that speicfy whether or not the values in an array fulfill a certain condition. This can be useful with arrays that contain names or other categorical values.
+
+```python
+>>> five_up = (a > 5) | (a == 5)
+>>> print(five_up)
+[[False False False False]
+ [ True  True  True  True]
+ [ True  True  True  True]]
+```
+
+You can also use `np.nonzero()` to select elements or indices from an array.
+
+Starting with this array:
+
+```python
+>>> a = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]])
+```
+
+You can use `np.nonzero()` to print the indices of elements that are, for example, less than 5:
+
+```python
+>>> a = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]])
+>>> b = np.nonzero(a < 5)
+>>> print(b)
+(array([0, 0, 0, 0], dtype=int64), array([0, 1, 2, 3], dtype=int64))
+```
+
+In this example, a tuple of arrays was returned: one for each dimension. The first array represents the row indices where these values are found, and the second array represents the column indices where the values are found.
+
+If you want to generate a list of coordinates where the element exist, you can zip the arrays, iterate over the list of coordinates, and print them. For example:
+
+```python
+>>> list_of_coordinates = list(zip(b[0], b[1]))
+>>> for coord in list_of_coordinates:
+...     print(coord)
+...
+(0, 0)
+(0, 1)
+(0, 2)
+(0, 3)
+```
+
+You can also use `np.nonzero()` to print the elements in an array that are less than 5 with:
+
+```python
+>>> print(a[b])
+[1 2 3 4]
+```
+
+If the element you're looking for doesn't exist in the array, then the returned array of indices will be emtpy. For example:
+
+```python
+>>> not_there = np.nonzero(a == 42)
+>>> print(not_there)
+(array([], dtype=int64), array([], dtype=int64))
+```
+
+Learn more about [[NumPy quickstart#Indexing, Slicing and Iterating|indexing and slicing here]] and [here](https://numpy.org/doc/stable/user/basics.indexing.html#basics-indexing).
+
+Read more about using the nonzero function at: [`nonzero`](https://numpy.org/doc/stable/reference/generated/numpy.nonzero.html#numpy.nonzero "numpy.nonzero").
+
+## How to create an array from existing data
+
+*This section covers* `slicing and indexing`, `np.vstack()`, `np.hstack()`, `np.hsplit()`, `.view()`, `copy()`
+
+You can easily create a new array from a section of an existing array.
+
+Let's say you have this array:
+
+```python
+>>> a = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+```
+
+You can create a new array from a section of your array any time by specifying where you want to slice your array.
+
+```python
+>>> arr1 = a[3:8]
+>>> arr1
+array([4, 5, 6, 7, 8])
+```
+
+Here, you grabbed a section of your array from index position 3 through index position 8.
+
+You can also stack two existing arrays, both vertically and horizontally. Let's say you have two arrays, `a1` and `a2`.
+
+```python
+>>> a1 = np.array([[1, 1],
+...                [2, 2]])
+>>> a2 = np.array([[3, 3],
+...                [4, 4]])
+```
+
+You can stack them vertically with `vstack`:
+
+```python
+>>> np.vstack((a1, a2))
+array([[1, 1],
+       [2, 2],
+       [3, 3],
+       [4, 4]])
+```
+
+Or stack them horizontally with `hstack`:
+
+```python
+>>> np.hstack((a1, a2))
+array([[1, 1, 3, 3],
+       [2, 2, 4, 4]])
+```
+
+You can split an array into several smaller arrays using `hsplit`. You can specify either the number of qually shaped arrays to return or the columns *after* which the division should occur.
+
+Let's say you have this array:
+
+```python
+>>> x = np.arange(1, 25).reshape(2, 12)
+>>> x
+array([[ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12],
+       [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]])
+```
+
+If you wanted to split this array into three equally shaped arrays, you would run:
+
+```python
+>>> np.hsplit(x, 3)
+[array([[ 1,  2,  3,  4],
+       [13, 14, 15, 16]]), array([[ 5,  6,  7,  8],
+       [17, 18, 19, 20]]), array([[ 9, 10, 11, 12],
+       [21, 22, 23, 24]])]
+```
+
+If you wanted to split your array after the third and fourth column, you'd run:
+
+```python
+>>> np.hsplit(x, (3, 4))
+[array([[ 1,  2,  3],
+       [13, 14, 15]]), array([[ 4],
+       [16]]), array([[ 5,  6,  7,  8,  9, 10, 11, 12],
+       [17, 18, 19, 20, 21, 22, 23, 24]])]
+```
+
+[[NumPy quickstart#Stacking together different arrays|Learn more about stacking and splitting arrays here]].
+
+You can use the `view` method to create a new array object that looks at the same data as the original array (a *shallow copy*).
+
