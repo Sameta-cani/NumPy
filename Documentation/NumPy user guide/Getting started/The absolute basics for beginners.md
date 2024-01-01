@@ -233,4 +233,103 @@ Or, if you start with these arrays:
 >>> y = np.array([[5, 6]])
 ```
 
-You can concatenate
+You can concatenate them with:
+
+```python
+>>> np.concatenate((x, y), axis=0)
+array([[1, 2],
+       [3, 4],
+       [5, 6]])
+```
+
+In order to remove elements from an array, it's simple to use indexing to select the elements that you want to keep.
+
+To read more about concatenate, see: [`concatenate`](https://numpy.org/doc/stable/reference/generated/numpy.concatenate.html#numpy.concatenate "numpy.concatenate").
+
+## How do you know the shape and size of an array?
+
+*This section covers* `ndarray.ndim`, `ndarray.size`, `ndarray.shape`
+
+`ndarray.ndim` will tell you the number of axes, or dimensions, of the array.
+
+`ndarray.size` will tell you the total number of elements of the array. This is the *product* of the elements of the array's shape.
+
+`ndarray.shape` will display a tuple of integers that indicate the number of elements stored along each dimension of the array. If, for example, you have a 2-D array with 2 rows and 3 columns, the shape of your array is `(2, 3)`.
+
+For example, if you create this array:
+
+```python
+>>> array_example = np.array([[[0, 1, 2, 3],
+...                            [4, 5, 6, 7]],
+...
+...                           [[0, 1, 2, 3],
+...                            [4, 5, 6, 7]],
+...
+...                           [[0, 1, 2, 3],
+...                            [4, 5, 6, 7]]])
+```
+
+To find the number of dimensions of the array, run:
+
+```python
+>>> array_example.ndim
+3
+```
+
+To find the total number of elements in the array, run:
+
+```python
+>>> array_example.size
+24
+```
+
+And to find the shape of your array, run:
+
+```python
+>>> array_example.shape
+(3, 2, 4)
+```
+
+## Can you reshape an array?
+
+*This section covers* `arr.reshape()`
+
+**Yes!**
+
+Using `arr.reshape()` will give a new shape to an array without changing the data. Just remember that when you use the reshape method, the array you want to produce needs to have the same number of elements as the original arrya. If you start with an array with 12 elements, you'll need to make sure that your new array also has a total of 12 elements.
+
+If you start with this array:
+
+```python
+>>> a = np.arange(6)
+>>> print(a)
+[0 1 2 3 4 5]
+```
+
+You can use `reshape()` to reshape your array. For example, you can reshape this array to an array with three rows and two columns:
+
+```python
+>>> b = a.reshape(3, 2)
+>>> print(b)
+[[0 1]
+ [2 3]
+ [4 5]]
+```
+
+With `np.reshape`, you can specify a few optional parameters:
+
+```python
+>>> np.reshape(a, newshape=(1, 6), order='C')
+array([[0, 1, 2, 3, 4, 5]])
+```
+
+`a` is the array to be reshaped.
+
+`newshape` is the new shape you want. You can specify an integer or a tuple of integers. If you specify an integer, the result will be an array of that length. The shape should be compatible with the original shape.
+
+`order: C` means to read/write the elements using C-like index order, `F` means to read/write the elements using Fortran-like index order, `A` means to read/write the elements in Fortra-like index order if a is Fortran contiguous in memory, C-like order otherwise. (This is an optional parameter and doesn't need to be speficied.)
+
+If you want to learn about C and Fortran order, you can [read more about the internal organization of NumPy arrays here](https://numpy.org/doc/stable/dev/internals.html#numpy-internals). Essentially, C and Fortran orders have to do with how indices correspond to the order the array is sorted in memory. In Fortran, when moving through the elements of a two-dimensioanl array as it is sorted in memory, the **first** index is the most rapidly varing index. As the first index moves to the next row as it changes, the matrix is sorted one column at a time. This is why Fortran is thought of as a **Column-major language**. In C on the other hand, the **last** index changes the most rapidly. The matrix is sorted by rows, making it a **Row-major language**. What you do for C or Fortran depends on whether it's more important to preserve the indexing convention or not reorder the data.
+
+[[NumPy quickstart#Shape Manipulation|Learn more about shape manipulation here]].
+
