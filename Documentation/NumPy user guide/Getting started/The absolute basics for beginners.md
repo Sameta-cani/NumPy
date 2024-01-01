@@ -878,4 +878,133 @@ array([[[1., 1.],
         [1., 1.]]])
 ```
 
-There are often instance where we want NumPy to initialize the values of an array.
+There are often instance where we want NumPy to initialize the values of an array. NumPy offers functions like `ones()` and `zeros()`, and the `random.Generator` class for random number generation for that. All you need to do is pass in the number of elements you want it to generate:
+
+```python
+>>> np.ones(3)
+array([1., 1., 1.])
+>>> np.zeros(3)
+array([0., 0., 0.])
+>>> rng = np.random.default_rng() # the simplest way to generate random numbers
+>>> rng.random(3)
+array([0.6918432 , 0.11536626, 0.82004025])
+```
+
+![np_array](../../../image/np_ones_zeros_random.png)
+
+You can also use `ones()`, `zeros()`, and `random()` to create a 2D array if you give them a tuple describing the dimensions of the matrix:
+
+```python
+>>> np.ones((3, 2))
+array([[1., 1.],
+       [1., 1.],
+       [1., 1.]])
+>>> np.zeros((3, 2))
+array([[0., 0.],
+       [0., 0.],
+       [0., 0.]])
+>>> rng.random((3, 2))
+array([[0.68999721, 0.28832562],
+       [0.92727773, 0.93004117],
+       [0.14524481, 0.70802871]])
+```
+
+![np_array](../../../image/np_ones_zeros_matrix.png)
+
+Read more about creating arrays, filled with `0`'s, `1`'s, other values or uninitialized, at [array creation routines](https://numpy.org/doc/stable/reference/routines.array-creation.html#routines-array-creation).
+
+## Generating random numbers
+
+The use of random number generation is an important part of the configuration and evaluation of many numerical and machine learning algorithms. Whether you need to randomly initialize weights in an artificial neural network, split data into random sets, or randomly shuffle your datasets, being able to generate random numbers (actually, repeatable pseudo-random numbers) is essential.
+
+With `Generator.integers`, you can generate random integers from low (remember that this is inclusive with NumPy) to high (exclusive). You can set `endpoint=True` to make the high number inclusive.
+
+You can generate a 2 x 4 array of random integers between 0 and 4 with:
+
+```python
+>>> rng.integers(5, size=(2, 4))
+array([[4, 0, 4, 1],
+       [1, 3, 4, 1]], dtype=int64)
+```
+
+[Read more about random number generation here](https://numpy.org/doc/stable/reference/random/index.html#numpyrandom).
+
+## How to get unique items and counts
+
+*This section covers* `np.unique()`
+
+You can find the unique elements in an array easily with `np.unique`
+
+For example, if you start with this array:
+
+```python
+>>> a = np.array([11, 11, 12, 13, 14, 15, 16, 17, 12, 13, 11, 14, 18, 19, 20])
+```
+
+You can use `np.unique` to print the unique values in your array:
+
+```python
+>>> unique_values = np.unique(a)
+>>> print(unique_values)
+[11 12 13 14 15 16 17 18 19 20]
+```
+
+To get the indices of unique values in a NumPy array (an array of first index positions of unique values in the array), just pass the `return_index` argument in `np.unique()` as well as your array.
+
+```python
+>>> unique_values, indices_list = np.unique(a, return_index=True)
+>>> print(indices_list)
+[ 0  2  3  4  5  6  7 12 13 14]
+```
+
+You can pass the `return_counts` argument in `np.unique()` along with your array to get the frequency count of unique values in a NumPy array.
+
+```python
+>>> unique_values, occurrence_count = np.unique(a, return_counts=True)
+>>> print(occurrence_count)
+[3 2 2 2 1 1 1 1 1 1]
+```
+
+This also works with 2D arrays! If you start with this array:
+
+```python
+>>> a_2d = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [1, 2, 3, 4]])
+```
+
+You can find unique values with:
+
+```python
+>>> unique_values = np.unique(a_2d)
+>>> print(unique_values)
+[ 1  2  3  4  5  6  7  8  9 10 11 12]
+```
+
+If the axis argument isn't passed, your 2D array will be flattend.
+
+If you want to get the unique rows or columns, make sure to pass the `axis` argument. To find the unique rows, specify `axis=0` and for columns, specify `axis=1`.
+
+```python
+>>> unique_rows = np.unique(a_2d, axis=0)
+>>> print(unique_rows)
+[[ 1  2  3  4]
+ [ 5  6  7  8]
+ [ 9 10 11 12]]
+```
+
+To get the unique rows, index position, and occurrence count, you can use:
+
+```python
+>>> unique_rows, indices, occurrence_count = np.unique(
+...     a_2d, axis=0, return_counts=True, return_index=True)
+>>> print(unique_rows)
+[[ 1  2  3  4]
+ [ 5  6  7  8]
+ [ 9 10 11 12]]
+>>> print(indices)
+[0 1 2]
+>>> print(occurrence_count)
+[2 1 1]
+```
+
+To learn more about finding the unique elements in an array, see [`unique`](https://numpy.org/doc/stable/reference/generated/numpy.unique.html#numpy.unique "numpy.unique").
+
