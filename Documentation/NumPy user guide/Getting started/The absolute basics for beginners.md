@@ -615,3 +615,267 @@ If you wanted to split your array after the third and fourth column, you'd run:
 
 You can use the `view` method to create a new array object that looks at the same data as the original array (a *shallow copy*).
 
+Views are an important NumPy concept! NumPy functions, as well as operations like indexing and slicing, will return views whenever possible. This saves memory and is faster (no copy of the data has to be made). However it's important to be aware of this - modifying data in a view also modifies the original array!
+
+Let's say you create this array:
+
+```python
+>>> a = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]])
+```
+
+Now we create an array `b1` slicing `a` and modify the first element of `b1`. This will modify the corresponding element in `a` as well!
+
+```python
+>>> a = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]])
+>>> b1 = a[0, :]
+>>> b1
+array([1, 2, 3, 4])
+>>> b1[0] = 99
+>>> b1
+array([99,  2,  3,  4])
+>>> a
+array([[99,  2,  3,  4],
+       [ 5,  6,  7,  8],
+       [ 9, 10, 11, 12]])
+```
+
+Using the `copy` method will make a complete copy of the array its data (a *deep copy*). To use this on your array, you could run:
+
+```python
+>>> b2 = a.copy()
+```
+
+[[NumPy quickstart#Copies and Views|Learn more about copies and views here]].
+
+## Basic array operations
+
+*This section covers addition, subtraction, multiplication, divison, and more*
+
+Once you've created your arrays, you can start to work with them. Let's say, for example, that you've created two arrays, one called "data" and one called "ones"
+
+![np_array](../../../image/np_array_dataones.png)
+
+You can add the arrays together with the plus sign.
+
+```python
+>>> data = np.array([1, 2])
+>>> ones = np.ones(2, dtype=int)
+>>> data + ones
+array([2, 3])
+```
+
+![np_array](../../../image/np_data_plus_ones.png)
+
+You can, of course, do more than just addition!
+
+```python
+>>> data - ones
+array([0, 1])
+>>> data * data
+array([1, 4])
+>>> data / data
+array([1., 1.])
+```
+
+![np_array](../../../image/np_sub_mult_divide.png)
+
+Basic operations are simple with NumPy. If you want to find the sum of the elements in an array, you'd use `sum()`. This works for 1D arrays, 2D arrays, and arrays in higher dimensions.
+
+```python
+>>> a = np.array([1, 2, 3, 4])
+>>> a.sum()
+10
+```
+
+To add the rows or the columns in a 2D array, you would specify the axis.
+
+If you start with this array:
+
+```python
+>>> b = np.array([[1, 1], [2, 2]])
+```
+
+You can sum over the aixs of rows with:
+
+```python
+>>> b.sum(axis=0)
+array([3, 3])
+```
+
+You can sum over the axis of columns with:
+
+```python
+>>> b.sum(axis=1)
+array([2, 4])
+```
+
+[[NumPy quickstart#Basic Operations|Learn more about basic operations here]].
+
+## Broadcasting
+
+There are times when you might want to carry out an operation between an array and a single number (also called *an operation between a vector and a scalar*) or between arrays of two different sizes. For example, your array (we'll call it "data") might contain information about distance in miles but you want to convert the information to kilometers. You can perform this operation with:
+
+```python
+>>> data = np.array([1.0, 2.0])
+>>> data * 1.6
+array([1.6, 3.2])
+```
+
+![np_array](../../../image/np_multiply_broadcasting.png)
+
+NumPy understands that the multiplication should happend with each cell. That concept is called **broadcasting**. Broadcasting is a mechanism that allows NumPy to perform operations on arrays of different shapes. The dimensions of your array must be compatible, for example, when the dimensions of both arrays are equal or when one of them is 1. If the dimensions are not compatible, you will get a `ValueError`.
+
+[Learn more about broadcasting here](https://numpy.org/doc/stable/user/basics.broadcasting.html#basics-broadcasting).
+
+## More useful array operations 
+
+*This section covers maximum, minimum, sum, mean, product, standard deviation, and more*
+
+NumPy also performs aggregation functions. In addition to `min`, `max`, and `sum`, you can easily run `mean` to get the average, `prood` to get the result of multiplying the elements together, `std` to get the standard deviation, and more.
+
+```python
+>>> data.max()
+2.0
+>>> data.min()
+1.0
+>>> data.sum()
+3.0
+```
+
+![np_array](../../../image/np_aggregation.png)
+
+Let's start with this array, called "a"
+
+```python
+a = np.array([[0.45053314, 0.17296777, 0.34376245, 0.5510652],
+...               [0.54627315, 0.05093587, 0.40067661, 0.55645993],
+...               [0.12697628, 0.82485143, 0.26590556, 0.56917101]])
+```
+
+It's very common to want to aggregate along a row or column. By default, every NumPy aggregation function will return the aggregate of the entire array. To find the sum or the minimum of the elements in your array, run:
+
+```python
+>>> a.sum()
+4.8595784
+```
+
+Or:
+
+```python
+>>> a.min()
+0.05093587
+```
+
+You can specify on which axis you want the aggregation function to be computed. For example, you can find the minimum value within each column by specifying `axis=0`.
+
+```python
+>>> a.min(axis=0)
+array([0.12697628, 0.05093587, 0.26590556, 0.5510652 ])
+```
+
+The four values listed above correspond to the number of columns in your array. With a four-column array, you will get four values as your result.
+
+Read more about [array methods here](https://numpy.org/doc/stable/reference/arrays.ndarray.html#array-ndarray-methods).
+
+## Creating matrices 
+
+You can pass Python lists of lists to create a 2-D array (or "matrix") to represent them in Numpy.
+
+```python
+>>> data = np.array([[1, 2], [3, 4], [5, 6]])
+>>> data
+array([[1, 2],
+       [3, 4],
+       [5, 6]])
+```
+
+![np_array](../../../image/np_create_matrix.png)
+
+Indexing and slicing operations are useful when you're manipulating matrices:
+
+```python
+>>> data[0, 1]
+2
+>>> data[1:3]
+array([[3, 4],
+       [5, 6]])
+>>> data[0:2, 0]
+array([1, 3])
+```
+
+![np_array](../../../image/np_matrix_indexing.png)
+
+You can aggregate matrices the same way you aggregated vectors:
+
+```python
+>>> data.max()
+6
+>>> data.min()
+1
+>>> data.sum()
+21
+```
+
+![np_array](../../../image/np_matrix_aggregation.png)
+
+You can aggregate all the values in a matrix and you can aggregate them across columns or rows using the `axis` parameter. To illustrate this point, let's look at a slightly modified dataset:
+
+```python
+>>> data = np.array([[1, 2], [5, 3], [4, 6]])
+>>> data
+array([[1, 2],
+       [5, 3],
+       [4, 6]])
+>>> data.max(axis=0)
+array([5, 6])
+>>> data.max(axis=1)
+array([2, 5, 6])
+```
+
+![np_array](../../../image/np_matrix_aggregation_row.png)
+
+Once you've created your matrices, you can add and multiply them using arithmetic operators if you have two matrices that are the same size.
+
+```python
+>>> data = np.array([[1, 2], [3, 4]])
+>>> ones = np.array([[1, 1], [1, 1]])
+>>> data + ones
+array([[2, 3],
+       [4, 5]])
+```
+
+![np_array](../../../image/np_matrix_arithmetic.png)
+
+You can do these arithmetic operations on matrices of different sizes, but only if one matrix has only one column or one row. In this case, NumPy will use its broadcast rules for the operation.
+
+```python
+>>> data = np.array([[1, 2], [3, 4], [5, 6]])
+>>> ones_row = np.array([[1, 1]])
+>>> data + ones_row
+array([[2, 3],
+       [4, 5],
+       [6, 7]])
+```
+
+Be aware that when NumPy prints N-dimensional arrays, the last axis is looped over the fastest while the first axis is the slowest. For instance:
+
+```python
+>>> np.ones((4, 3, 2))
+array([[[1., 1.],
+        [1., 1.],
+        [1., 1.]],
+
+       [[1., 1.],
+        [1., 1.],
+        [1., 1.]],
+
+       [[1., 1.],
+        [1., 1.],
+        [1., 1.]],
+
+       [[1., 1.],
+        [1., 1.],
+        [1., 1.]]])
+```
+
+There are often instance where we want NumPy to initialize the values of an array.
