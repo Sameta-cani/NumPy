@@ -1,3 +1,4 @@
+**Origianl page:** https://numpy.org/doc/stable/user/absolute_beginners.html#
 # NumPy: the absolute basics for beginners
 
 Welcome to the absolute beginner's guide to NumPy! If you have comments or suggestions, please don't hesitate to  [reach out](https://numpy.org/community/)!
@@ -1553,5 +1554,19 @@ For example, you an plot a 1D array this:
 With Matplotlib, you have access to an enormous number of visualization options.
 
 ```python
+>>> fig = plt.figure()
+>>> ax = fig.add_subplot(projection='3d')
+>>> X = np.arange(-5, 5, 0.15)
+>>> Y = np.arange(-5, 5, 0.15)
+>>> X, Y = np.meshgrid(X, Y)
+>>> R = np.sqrt(X**2 + Y**2)
+>>> Z = np.sin(R)
 
+>>> ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap='viridis')
 ```
+
+![np_array](../../../image/Figure_3.png)
+
+To read more about Matplotlib and what it can do, take a look at [the official documentation](https://matplotlib.org/). For directions regarding installing Matplotlib, see the official [installation section](https://matplotlib.org/users/installing.html).
+
+*Image credits: Jay Alammar http://jalammar.github.io/*
