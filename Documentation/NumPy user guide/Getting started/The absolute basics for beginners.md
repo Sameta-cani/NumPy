@@ -1151,3 +1151,407 @@ You can also reverse the column at index position 1 (the second column):
 
 Read more about reversing arrays at [`flip`](https://numpy.org/doc/stable/reference/generated/numpy.flip.html#numpy.flip "numpy.flip").
 
+## Reshaping and flattening
+
+*This section covers* `.flatten()`, `ravel()`
+
+There are two popular ways to flatten an array: `.flatten()` and `.ravel()`. The primary difference between the two is that the new array created using `ravel()` is actually a reference to the parent array (i.e., a "view"). This means that any changes to the new array will affect the parent array as well. Since `ravel` does not create a copy, it's memory efficient.
+
+If you start with this array:
+
+```python
+>>> x = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]])
+```
+
+You can use `flatten` to flatten your array into a 1D array.
+
+```python
+>>> x.flatten()
+array([ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12])
+```
+
+When you use `flatten`, changes to your new array won't change the parent array.
+
+For example:
+
+```python
+>>> a1 = x.flatten()
+>>> a1[0] = 99
+>>> print(x) # Original array
+[[ 1  2  3  4]
+ [ 5  6  7  8]
+ [ 9 10 11 12]]
+>>> print(a1) # New array
+[99  2  3  4  5  6  7  8  9 10 11 12]
+```
+
+But when you use `ravel`,the changes you make to tne new array will affect the parent array.
+
+For example:
+
+```python
+>>> a2 = x.ravel()
+>>> a2[0] = 98
+>>> print(x) # Original array
+[[98  2  3  4]
+ [ 5  6  7  8]
+ [ 9 10 11 12]]
+>>> print(a2) # New array
+[98  2  3  4  5  6  7  8  9 10 11 12]
+```
+
+Read more about `flatten` at [`ndarray.flatten`](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.flatten.html#numpy.ndarray.flatten "numpy.ndarray.flatten") and `ravel` at [`ravel`](https://numpy.org/doc/stable/reference/generated/numpy.ravel.html#numpy.ravel "numpy.ravel").
+
+## How to access the docstring for more information
+
+*This section covers* `help()`, `?`, `??`
+
+When it comes to the data science ecosystem, Python and NumPy are built with the user in mind. One of the best examples of this is the built-in access to documentation. Every object contains the reference to a string, which is known as the **docstring**. In most cases, this docstring contains a quick and concise summary of the object and how to use it. Python has a built-in `help()` function that can help you access this information. This means that nearly any time you need more information, you can use `help()` to quickly find the information that you need.
+
+For example:
+
+```python
+>>> help(max)
+Help on built-in function max in module builtins:
+
+max(...)
+    max(iterable, *[, default=obj, key=func]) -> value
+    max(arg1, arg2, *args, *[, key=func]) -> value
+
+    With a single iterable argument, return its biggest item. The
+    default keyword-only argument specifies an object to return if
+    the provided iterable is empty.
+    With two or more arguments, return the largest argument.
+```
+
+Because access to additional information is so useful, IPython uses the `?` character as a shorthand for accessing this documentation along with other relevant information. IPython is a command shell for interative computing in multiple langauges. [You can find more information about IPython here](https://ipython.org/).
+
+For example:
+
+```python
+In [0]: max?
+max(iterable, *[, default=obj, key=func]) -> value
+max(arg1, arg2, *args, *[, key=func]) -> value
+
+With a single iterable argument, return its biggest item. The
+default keyword-only argument specifies an object to return if
+the provided iterable is empty.
+With two or more arguments, return the largest argument.
+Type:      builtin_function_or_method
+```
+
+You can even use this notation for object methods and objects themselves.
+
+Let's say you create this array:
+
+```python
+>>> a = np.array([1, 2, 3, 4, 5, 6])
+```
+
+Then you can obtain a lot of useful information (first details about `a` itself, followd by the docstring of `ndarray` of which `a` is an instance):
+
+```python
+In [1]: a?
+Type:            ndarray
+String form:     [1 2 3 4 5 6]
+Length:          6
+File:            ~/anaconda3/lib/python3.9/site-packages/numpy/__init__.py
+Docstring:       <no docstring>
+Class docstring:
+ndarray(shape, dtype=float, buffer=None, offset=0,
+        strides=None, order=None)
+
+An array object represents a multidimensional, homogeneous array
+of fixed-size items.  An associated data-type object describes the
+format of each element in the array (its byte-order, how many bytes it
+occupies in memory, whether it is an integer, a floating point number,
+or something else, etc.)
+
+Arrays should be constructed using `array`, `zeros` or `empty` (refer
+to the See Also section below).  The parameters given here refer to
+a low-level method (`ndarray(...)`) for instantiating an array.
+
+For more information, refer to the `numpy` module and examine the
+methods and attributes of an array.
+
+Parameters
+----------
+(for the __new__ method; see Notes below)
+
+shape : tuple of ints
+        Shape of created array.
+...
+```
+
+This also works for functions and other objects that **you** create. Just remember to include a docstring with your function using a string literal (`""" """` or `''' '''` around your documentation).
+
+For example, if you create this function:
+
+```python
+>>> def double(a):
+...     '''Return a * 2'''
+...     return a * 2
+```
+
+You can obtain information about the function:
+
+```python
+In [2]: double?
+Signature: double(a)
+Docstring: Return a * 2
+File:      ~/Desktop/<ipython-input-23-b5adf20be596>
+Type:      function
+```
+
+You can reach another level of information by reading the source code of the object you're interested in. Using a double question mark (`??`) allows you to access the source code.
+
+For example:
+
+```python
+In [3]: double??
+Signature: double(a)
+Source:
+def double(a):
+    '''Return a * 2'''
+    return a * 2
+File:      ~/Desktop/<ipython-input-23-b5adf20be596>
+Type:      function
+```
+
+If the object in question is compiled in a language other than Python, using `??` will return the same information as `?`. You'll find this with a lot of built-in objects and types, for example:
+
+```python
+ln [4]: len?
+Signature: len(obj, /)
+Docstring: Return the number of items in a container.
+Type:      builtin_function_or_method
+```
+
+and:
+
+```python
+In [5]: len??
+Signature: len(obj, /)
+Docstring: Return the number of items in a container.
+Type:      builtin_function_or_method
+```
+
+have the same output because they were compiled in a programming language other than Python.
+
+## Working with mathematical formulas
+
+The ease of implementing mathematical formulas that work on arrays is one of the things that make NumPy so widely used in the scientific Python community.
+
+For example, this is the mean squre error formula (a central formula used in supervised machine learning models that deal with regression):
+
+![np_array](../../../image/np_MSE_formula.png)
+
+Implementing this formula is simple and straightforward in NumPy:
+
+![np_array](../../../image/np_MSE_implementation.png)
+
+What makes this work so well is the `predictions` and `labels` can contain one or a thousand values. They only need to be the same size.
+
+You can visualize it this way:
+
+![np_array](../../../image/np_mse_viz1.png)
+
+In this example, both the predictions and labels vectors contain three values, meaning `n` has a value of three. After we carry out subtractions the values in the vector are squared. Then NumPy sums the values, and your result is the error value for that predictions  and a score for the quality of the model.
+
+![np_array](../../../image/np_mse_viz2.png)
+
+![np_array](../../../image/np_MSE_explanation2.png)
+
+## How to save and load NumPy objects
+
+*This section covers* `np.save`, `np.savez`, `np.savetxt`, `np.load`, `np.loadtxt`
+
+You will, at some point, want to save your arrays to disk and load them back without having to re-run the code. Fortunately, there are several ways to save and load objects with NumPy. The ndarray objects can be saved to and loaded from the disk files with `loadtxt` and `savetxt` functions that handle normal text files, `load` and `save` functions that handle NumPy binary files with a `.npy` file extension, and a `savez` function that handles NumPy files with a **.npz** file extension.
+
+The **.npy** and **.npz** files store data, shape, dtype, and other information required to reconstruct the ndarray in a way that allow the array to be correctly retrieved, even when the file is on another machine with different architecture.
+
+If you want to store a single ndarray object, store it as a .npy file using `np.save`. If you want to store more than one ndarray object in a single file, save it as a .npz file using `np.savez`. You can also save several arrays into a single file in cimpreseed npz format with [`savez_compressed`](https://numpy.org/doc/stable/reference/generated/numpy.savez_compressed.html#numpy.savez_compressed "numpy.savez_compressed").
+
+It's easy to save and load and array with `np.save()`. Just make sure to specify the array you want to save and a file name. For example, if you create this array:
+
+```python
+>>> a = np.array([1, 2, 3, 4, 5, 6])
+```
+
+You can save it as "filename.npy" with:
+
+```python
+>>> np.save('filename', a)
+```
+
+You can use `np.load()` to reconstruct your array.
+
+```python
+>>> b = np.load('filename.npy')
+```
+
+If you want to check your array, you can run:
+
+```python
+>>> print(b)
+[1 2 3 4 5 6]
+```
+
+You can save a NumPy array as a plain text file like a **.csv** or **.txt** file with `np.savetxt`.
+
+For example, if you create this array:
+
+```python
+>>> csv_arr = np.array([1, 2, 3, 4, 5, 6, 7, 8])
+```
+
+You can easily save it as a .csv file with the name "new_file.csv" like this:
+
+```python
+>>> np.savetxt('new_file.csv', csv_arr)
+```
+
+You can quickly and easily load your saved text file using `loadtxt()`:
+
+```python
+>>> np.loadtxt('new_file.csv')
+array([1., 2., 3., 4., 5., 6., 7., 8.])
+```
+
+The `savetxt()` and `loadtxt()` functions accept additional optional parameters such as header, footer, and delimiter. While text files can be easier for sharing, .npy and .npz files are smaller and faster to read. If you need more sophisticated handling of your text file (for example, if you need to work with lines that contain missing values), you will want to use the [`genfromtxt`](https://numpy.org/doc/stable/reference/generated/numpy.genfromtxt.html#numpy.genfromtxt "numpy.genfromtxt") function.
+
+With [`savetxt`](https://numpy.org/doc/stable/reference/generated/numpy.savetxt.html#numpy.savetxt "numpy.savetxt"), you can specify headers, footers, comments, and more.
+
+Learn more about [input and output routines here](https://numpy.org/doc/stable/reference/routines.io.html#routines-io).
+
+## Importing and exporting a CSV
+
+It's simple to read in a CSV that contains existing information. The best and easiest way to do this is to use [Pandas](https://pandas.pydata.org/).
+
+```python
+>>> import pandas as pd
+
+>>> # If all of your columns are the same type:
+>>> x = pd.read_csv('music.csv', header=0).values
+>>> print(x)
+[['Billie Holiday' 'Jazz' 1300000 27000000]
+ ['Jimmie Hendrix' 'Rock' 2700000 70000000]
+ ['Miles Davis' 'Jazz' 1500000 48000000]
+ ['SIA' 'Pop' 2000000 74000000]]
+
+>>> # You can also simply select the columns you need:
+>>> x = pd.read_csv('music.csv', usecols=['Artist', 'Plays']).values
+>>> print(x)
+[['Billie Holiday' 27000000]
+ ['Jimmie Hendrix' 70000000]
+ ['Miles Davis' 48000000]
+ ['SIA' 74000000]]
+```
+
+![np_array](../../../image/np_pandas.png)
+
+It's simple to use Pandas in order to export your array as well. If you are new to NumPy, you may want to create a Pandas dataframe from the values in your array and then write the data frame to a CSV file with Pandas.
+
+If you created this array "a"
+
+```python
+>>> a = np.array([[-2.58289208,  0.43014843, -1.24082018, 1.59572603],
+...               [ 0.99027828, 1.17150989,  0.94125714, -0.14692469],
+...               [ 0.76989341,  0.81299683, -0.95068423, 0.11769564],
+...               [ 0.20484034,  0.34784527,  1.96979195, 0.51992837]])
+```
+
+You could create a Pandas dataframe
+
+```python
+>>> df = pd.DataFrame(a)
+>>> print(df)
+          0         1         2         3
+0 -2.582892  0.430148 -1.240820  1.595726
+1  0.990278  1.171510  0.941257 -0.146925
+2  0.769893  0.812997 -0.950684  0.117696
+3  0.204840  0.347845  1.969792  0.519928
+```
+
+You can easily save your dataframe with:
+
+```python
+>>> df.to_csv('pd.csv')
+```
+
+And read your CSV with:
+
+```python
+>>> data = pd.read_csv('pd.csv')
+```
+
+![np_array](../../../image/np_readcsv.png)
+
+You can also save your array with the NumPy `savetxt` method.
+
+```python
+np.savetxt('np.csv', a, fmt='%.2f', delimiter=',', header='1, 2, 3, 4')
+```
+
+If you're using the command line, you can read your saved CSV any time with a command such as:
+
+```bash
+$ cat np.csv
+#  1,  2,  3,  4
+-2.58,0.43,-1.24,1.60
+0.99,1.17,0.94,-0.15
+0.77,0.81,-0.95,0.12
+0.20,0.35,1.97,0.52
+```
+
+Or you can open the file any time with a text editor!
+
+If you’re interested in learning more about Pandas, take a look at the [official Pandas documentation](https://pandas.pydata.org/index.html). Learn how to install Pandas with the [official Pandas installation information](https://pandas.pydata.org/pandas-docs/stable/install.html).
+
+## Plotting arrays with Matplotlib
+
+If you need to generate a plot for your values, it's very simple with [Matplotlib](https://matplotlib.org/).
+
+For example, you may have an array like this one:
+
+```python
+>>> a = np.array([2, 1, 5, 7, 4, 6, 8, 14, 10, 9, 18, 20, 22])
+```
+
+If you already have Matplotlib installed, you can import it with:
+
+```python
+>>> import matplotlib.pyplot as plt
+# If you're using Jupyter Notebook, you may also want to run the following
+# line of code to display your code in the notebook:
+
+%matplotlib inline
+```
+
+All you need to do plot your values is run:
+
+```python
+>>> plt.plot(a)
+
+# If you are running from a command line, you may need to do this:
+# >>> plt.show()
+```
+
+![np_array](../../../image/Figure_1.png)
+
+For example, you an plot a 1D array this:
+
+```python
+>>> x = np.linspace(0, 5, 20)
+>>> y = np.linspace(0, 10, 20)
+>>> plt.plot(x, y, 'purple') # line
+>>> plt.plot(x, y, 'o') # dots
+```
+
+![np_array](../../../image/Figure_2.png)
+
+With Matplotlib, you have access to an enormous number of visualization options.
+
+```python
+
+```
