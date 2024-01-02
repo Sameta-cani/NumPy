@@ -1008,3 +1008,146 @@ To get the unique rows, index position, and occurrence count, you can use:
 
 To learn more about finding the unique elements in an array, see [`unique`](https://numpy.org/doc/stable/reference/generated/numpy.unique.html#numpy.unique "numpy.unique").
 
+## Transposing and reshaping a matrix
+
+*This section covers* `arr.reshape()`, `arr.transpose()`, `arr.T`
+
+It's common to need to transpose your matrices. NumPy arrays have the property `T` that allows you to transpose a matrix.
+
+
+![np_array](../../../image/np_transposing_reshaping.png)
+
+You may also need to switch the dimensions of a matrix. This can happen when, for example, you have a model that expects a certain input shape that is different from your dataset. This is where the `reshape` method can be useful. You simply need to pass in the new dimensions that you want for the matrix.
+
+```python
+>>> data.reshape(2, 3)
+array([[1, 2, 3],
+       [4, 5, 6]])
+>>> data.reshape(3, 2)
+array([[1, 2],
+       [3, 4],
+       [5, 6]])
+```
+
+![np_array](../../../image/np_reshape.png)
+
+You can also use `.transpose()` to reverse or change the axes of an array according to the values you specify.
+
+If you start with this array:
+
+```python
+>>> arr = np.arange(6).reshape((2, 3))
+>>> arr
+array([[0, 1, 2],
+       [3, 4, 5]])
+```
+
+You can transpose your array with `arr.transpose()`.
+
+```python
+>>> arr.transpose()
+array([[0, 3],
+       [1, 4],
+       [2, 5]])
+```
+
+You can also use `arr.T`:
+
+```python
+>>> arr.T
+array([[0, 3],
+       [1, 4],
+       [2, 5]])
+```
+
+To learn more about transposing and reshaping arrays, see [`transpose`](https://numpy.org/doc/stable/reference/generated/numpy.transpose.html#numpy.transpose "numpy.transpose") and [`reshape`](https://numpy.org/doc/stable/reference/generated/numpy.reshape.html#numpy.reshape "numpy.reshape").
+
+## How to reverse an array
+
+*This section covers* `np.flip()`
+
+NumPy's `np.flip()` function allows you to flip, or reverse, the contents of an array along an axis. When using `np.flip()`, specify the array you would like to reverse and the axis. If you don't specify the axis, NumPy will reverse the contents along all of the axes of your input array.
+
+### Reversing a 1D array
+
+If you begin with a 1D array like this one:
+
+```python
+>>> arr = np.array([1, 2, 3, 4, 5, 6, 7, 8])
+```
+
+You can reverse it with:
+
+```python
+>>> reversed_arr = np.flip(arr)
+```
+
+If you want to print your reversed array, you can run:
+
+```python
+>>> print('Reversed Array: ', reversed_arr)
+Reversed Array:  [8 7 6 5 4 3 2 1]
+```
+
+### Reversing a 2D array
+
+A 2D array works much the same way.
+
+If you start with this array:
+
+```python
+>>> arr_2d = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]])
+```
+
+You can reverse the content in all of the rows and all of the columns with:
+
+```python
+>>> reversed_arr = np.flip(arr_2d)
+>>> print(reversed_arr)
+[[12 11 10  9]
+ [ 8  7  6  5]
+ [ 4  3  2  1]]
+```
+
+You can easily reverse only the *rows* with:
+
+```python
+>>> reversed_arr_rows = np.flip(arr_2d, axis=0)
+>>> print(reversed_arr_rows)
+[[ 9 10 11 12]
+ [ 5  6  7  8]
+ [ 1  2  3  4]]
+```
+
+Or reverse only the *columns* with:
+
+```python
+>>> reversed_arr_columns = np.flip(arr_2d, axis=1)
+>>> print(reversed_arr_columns)
+[[ 4  3  2  1]
+ [ 8  7  6  5]
+ [12 11 10  9]]
+```
+
+You can also reverse the contents of only one column or row. For example, you can reverse the contents of the row at index position 1 (the second row):
+
+```python
+>>> arr_2d[1] = np.flip(arr_2d[1])
+>>> print(arr_2d)
+[[ 1  2  3  4]
+ [ 8  7  6  5]
+ [ 9 10 11 12]]
+```
+
+You can also reverse the column at index position 1 (the second column):
+
+```python
+>>> arr_2d[:, 1] = np.flip(arr_2d[:, 1])
+>>> print(arr_2d)
+[[ 1 10  3  4]
+ [ 8  7  6  5]
+ [ 9  2 11 12]]
+```
+
+Read more about reversing arrays at [`flip`](https://numpy.org/doc/stable/reference/generated/numpy.flip.html#numpy.flip "numpy.flip").
+
