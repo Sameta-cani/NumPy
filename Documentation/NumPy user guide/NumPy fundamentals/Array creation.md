@@ -258,3 +258,43 @@ This is the most common case of large array creation. The details depend greatly
 ### Standard Binary Formats
 
 Various fields have standard formats for array data. The following lists the ones with known Python libraries to read them and return NumPy arrays (there may be others for which it is possible to read and convert to NumPy arrays so check the last section as well)
+
+```
+HDF5: h5py
+FITS: Astropy
+```
+
+Examples of formats that cannot be read directly but for which it is not hard to convert are those formats supported by libraries like PIL (able to read and write many image formats such as jpg, png, etc).
+
+### Common ASCII Formats
+
+Delimited files such as comma separated value (csv) and tab separated value (tsv) files are used for programs like Excel an LabView. Python functions can read and parse these files line-by-line. NumPy has two standard routines for importing a file with delimite data [`numpy.loadtxt`](https://numpy.org/doc/stable/reference/generated/numpy.loadtxt.html#numpy.loadtxt "numpy.loadtxt") and [`numpy.genfromtxt`](https://numpy.org/doc/stable/reference/generated/numpy.genfromtxt.html#numpy.genfromtxt "numpy.genfromtxt"). These functions have more involved use cases in [Reading and writing files](https://numpy.org/doc/stable/user/how-to-io.html). A simple example given a `simple.csv`:
+
+```bash
+$ cat simple.csv
+x, y
+0, 0
+1, 1
+2, 4
+3, 9
+```
+
+Importing `simple.csv` is accomplished using [`numpy.loadtxt`](https://numpy.org/doc/stable/reference/generated/numpy.loadtxt.html#numpy.loadtxt "numpy.loadtxt"):
+
+```python
+np.loadtxt('simple.csv', delimiter = ',', skiprows = 1)
+array([[0., 0.],
+	   [1., 1.],
+	   [2., 4.],
+	   [3., 9.]])
+```
+
+More generic ASCII files can be read using [`scipy.io`](https://docs.scipy.org/doc/scipy/reference/io.html#module-scipy.io "(in SciPy v1.11.2)") and [Pandas](https://pandas.pydata.org/).
+
+## 5) Creating arrays from raw bytes through the use of strings or buffers
+
+There are a vareity of approaches one can use. If the file has a relatively simple format then one can write a simple I/O library and use the NumPy `fromfile()` function and `.tofile()` method to read and write NumPy arrays directly (mind your byteorder though!) If a good C or C++ library exists that read the data, one can wrap that library with a variety of techniques though that certainly is much more work and requires significantly more advanced knowledge to interface with C or C++.
+
+## 6) Use of special library functions (e.g., SciPy, Pandas, and OpenCV)
+
+NumPy is the fundamental library for array containers in the Python Scientific Computing stack. Many Python libraries, including SciPy, Pandas, and OpenCV, use NumPy ndarrays as the common format for data exchange, These libraries can create, operate on, and work with NumPy arrays.
